@@ -21,9 +21,19 @@ function loadCart(){
     const raw = localStorage.getItem('techvilla_cart');
     if(raw){ CART = JSON.parse(raw) || []; }
   }catch(e){ CART = []; }
+  // ensure items have qty when loaded
+  try{ normalizeCart(); }catch(e){}
 }
 function saveCart(){
   try{ localStorage.setItem('techvilla_cart', JSON.stringify(CART)); }catch(e){}
+}
+
+// Ensure loaded cart items have a qty property (for older saved carts)
+function normalizeCart(){
+  CART = CART.map(item => {
+    if(typeof item.qty === 'number' && item.qty > 0) return item;
+    return Object.assign({}, item, { qty: 1 });
+  });
 }
 
 const PRODUCTS = [
@@ -87,15 +97,32 @@ function closeModal(){
 }
 
 function updateCart(){
-  cartCountEl.textContent = CART.length;
-  const header = document.getElementById('cartCountHeader');
-  if(header) header.textContent = CART.length;
-}
-
-function addToCart(product){
-  CART.push(product);
+  const subtotal = CART.reduce((s,it)=>s + ((it.price||0) * (it.qty||1)),0);
+  // compute total discount based on per-item discount property (if present)
+  const discountTotal = CART.reduce((s,it)=>{
+    const line = (it.price||0) * (it.qty||1);
+    return s + ((it.discount && typeof it.discount === 'number') ? +(line * it.discount) : 0);
+  }, 0);
+    const shippingMethod = (document.querySelector('input[name="shipping"]:checked')||{}).value || 'standard';
+  let shipping = 0;
+  if(shippingMethod==='expedited') shipping = 9.99;
+  if(shippingMethod==='standard') shipping = 4.99;
+  if(shippingMethod==='pickup') shipping = 0;
+  // tax calculated on subtotal minus discounts
+  const taxable = Math.max(0, subtotal - discountTotal);
+  const tax = +(taxable * 0.07).toFixed(2);
+  const total = +(subtotal - discountTotal + shipping + tax).toFixed(2);
+  // If product already in cart (by id), increment qty; otherwise add with qty:1
+  const existing = CART.find(it => it.id === product.id);
+  const discountEl = document.getElementById('discountAmount');
+  if(existing){ existing.qty = (existing.qty || 1) + 1; }
+  else { CART.push(Object.assign({}, product, { qty: 1 })); }
+  normalizeCart();
   updateCart();
+  if(discountEl) discountEl.textContent = formatPrice(discountTotal);
   saveCart();
+  // If we're currently viewing the cart page, re-render items so order summary updates immediately
+  if(document.getElementById('orderItems')) renderCartItems();
 }
 
 document.addEventListener('click',e=>{
@@ -119,12 +146,33 @@ document.addEventListener('click',e=>{
   }
 });
 
-modalClose.addEventListener('click',closeModal);
-modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
-addToCartBtn.addEventListener('click',()=>{if(currentProduct){addToCart(currentProduct);closeModal()}});
+if(modalClose) modalClose.addEventListener('click',closeModal);
+if(modal) modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
+if(addToCartBtn) addToCartBtn.addEventListener('click',()=>{if(currentProduct){addToCart(currentProduct);closeModal()}});
 
-searchInput.addEventListener('input',()=>applyFilters());
-categoryFilter.addEventListener('change',()=>applyFilters());
+if(searchInput) searchInput.addEventListener('input',()=>applyFilters());
+if(categoryFilter) categoryFilter.addEventListener('change',()=>applyFilters());
+
+// Update header cart count only
+function updateCart(){
+  const totalQty = CART.reduce((s,it)=>s + (it.qty||1), 0);
+  if(cartCountEl) cartCountEl.textContent = totalQty;
+  const header = document.getElementById('cartCountHeader');
+  if(header) header.textContent = totalQty;
+}
+
+// Add product to cart (increment qty if present)
+function addToCart(product){
+  if(!product) return;
+  const existing = CART.find(it => it.id === product.id);
+  if(existing){ existing.qty = (existing.qty || 1) + 1; }
+  else { CART.push(Object.assign({}, product, { qty: 1 })); }
+  normalizeCart();
+  saveCart();
+  updateCart();
+  // If we're currently viewing the cart page, re-render items so order summary updates immediately
+  if(document.getElementById('orderItems')) renderCartItems();
+}
 
 function applyFilters(){
   const q = searchInput.value.trim().toLowerCase();
@@ -140,7 +188,7 @@ function applyFilters(){
 // Init
 document.addEventListener('DOMContentLoaded',()=>{
   yearEl.textContent = new Date().getFullYear();
-  renderProducts(PRODUCTS);
+  if(productsEl) renderProducts(PRODUCTS);
   loadCart();
   updateCart();
   // If we're on the cart page, initialize cart UI
@@ -149,9 +197,22 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 /* Cart page support */
 function initCartPage(){
+  // Ensure we have the latest cart from localStorage (in case it changed in another tab)
+  loadCart();
+  updateCart();
   renderCartItems();
   attachCartListeners();
 }
+
+// Listen for storage changes (other tabs/windows) and update the UI
+window.addEventListener('storage', (e)=>{
+  if(e.key === 'techvilla_cart'){
+    loadCart();
+    updateCart();
+    // If on cart page, re-render items and totals
+    if(document.getElementById('orderItems')) renderCartItems();
+  }
+});
 
 function renderCartItems(){
   const container = document.getElementById('orderItems');
@@ -162,15 +223,28 @@ function renderCartItems(){
   CART.forEach((p,idx)=>{
     const item = document.createElement('div');
     item.className = 'cart-item';
+    // Show quantity controls and line total
+    const lineTotal = (p.price || 0) * (p.qty || 1);
+    // Simple per-line tax (7%) and per-line discount (if any)
+    const lineTax = +((lineTotal) * 0.07).toFixed(2);
+    const lineDiscount = (p.discount && typeof p.discount === 'number') ? +(lineTotal * p.discount).toFixed(2) : 0;
     item.innerHTML = `<div style="display:flex;gap:12px;align-items:center">
       <img src="${p.imageLocal || p.imageFallback || ''}" alt="${p.name}" style="width:64px;height:64px;object-fit:cover;border-radius:8px;" />
       <div style="flex:1">
         <div style="font-weight:600">${p.name}</div>
         <div class="muted" style="font-size:13px">${p.desc}</div>
+        <div style="margin-top:8px;display:flex;align-items:center;gap:8px">
+          <button class="btn small" aria-label="Decrease quantity for ${p.name}" data-decr="${idx}">-</button>
+          <input class="qty-input" data-idx="${idx}" value="${p.qty || 1}" aria-label="Quantity for ${p.name}" inputmode="numeric" style="width:56px;text-align:center;padding:6px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit" />
+          <button class="btn small" aria-label="Increase quantity for ${p.name}" data-incr="${idx}">+</button>
+        </div>
+        <div style="margin-top:6px;font-size:13px;color:var(--muted)">
+          Line tax: ${formatPrice(lineTax)}${lineDiscount?(' • Discount: ' + formatPrice(lineDiscount)) : ''}
+        </div>
       </div>
       <div style="text-align:right">
-        <div>${formatPrice(p.price)}</div>
-        <button class="btn small" data-remove="${idx}">Remove</button>
+        <div style="font-weight:700">${formatPrice(lineTotal - lineDiscount + lineTax)}</div>
+        <div style="margin-top:6px"><button class="btn small" data-remove="${idx}">Remove</button></div>
       </div>
     </div>`;
     container.appendChild(item);
@@ -179,12 +253,14 @@ function renderCartItems(){
 }
 
 function updateTotals(){
-  const subtotal = CART.reduce((s,it)=>s + (it.price||0),0);
+  const subtotal = CART.reduce((s,it)=>s + ((it.price||0) * (it.qty||1)),0);
   const shippingMethod = (document.querySelector('input[name="shipping"]:checked')||{}).value || 'standard';
   let shipping = 0;
   if(shippingMethod==='expedited') shipping = 9.99;
   if(shippingMethod==='standard') shipping = 4.99;
   if(shippingMethod==='pickup') shipping = 0;
+  // If cart is empty, clear shipping fee
+  if(subtotal === 0) shipping = 0;
   const tax = +(subtotal * 0.07).toFixed(2);
   const total = +(subtotal + shipping + tax).toFixed(2);
   const subtotalEl = document.getElementById('subtotal');
@@ -206,18 +282,90 @@ function attachCartListeners(){
     saveCart();
     updateCart();
     renderCartItems();
+    updateTotals();
   });
 
-  document.getElementById('orderItems').addEventListener('click',e=>{
-    const rem = e.target.closest('button[data-remove]');
-    if(!rem) return;
-    const idx = Number(rem.dataset.remove);
-    if(Number.isFinite(idx)){
-      CART.splice(idx,1);
+  // Header clear cart button (on main page)
+  const clearHeader = document.getElementById('clearCartHeader');
+  if(clearHeader){
+    clearHeader.addEventListener('click', ()=>{
+      const totalQty = CART.reduce((s,it)=>s + (it.qty||1),0);
+      if(totalQty > 6){
+        if(!confirm('You have multiple items in your cart. Clear all items?')) return;
+      }
+      CART = [];
       saveCart();
       updateCart();
-      renderCartItems();
+      // If on cart page, re-render
+      if(document.getElementById('orderItems')) renderCartItems();
+      updateTotals();
+    });
+  }
+
+  document.getElementById('orderItems').addEventListener('click',e=>{
+    // Remove
+    const rem = e.target.closest('button[data-remove]');
+    if(rem){
+      const idx = Number(rem.dataset.remove);
+      if(Number.isFinite(idx)){
+        // If cart has many items (or total qty large), confirm removal
+        const totalQty = CART.reduce((s,it)=>s + (it.qty||1),0);
+        if(totalQty > 8){
+          const ok = confirm('Your cart has many items — are you sure you want to remove this item?');
+          if(!ok) return;
+        }
+        CART.splice(idx,1);
+        saveCart();
+        updateCart();
+        renderCartItems();
+      }
+      return;
     }
+
+    // Increase quantity
+    const inc = e.target.closest('button[data-incr]');
+    if(inc){
+      const idx = Number(inc.dataset.incr);
+      if(Number.isFinite(idx) && CART[idx]){
+        CART[idx].qty = (CART[idx].qty || 1) + 1;
+        saveCart();
+        updateCart();
+        renderCartItems();
+      }
+      return;
+    }
+
+    // Decrease quantity
+    const decr = e.target.closest('button[data-decr]');
+    if(decr){
+      const idx = Number(decr.dataset.decr);
+      if(Number.isFinite(idx) && CART[idx]){
+        CART[idx].qty = (CART[idx].qty || 1) - 1;
+        if(CART[idx].qty <= 0){ CART.splice(idx,1); }
+        saveCart();
+        updateCart();
+        renderCartItems();
+      }
+      return;
+    }
+  });
+
+  // Also allow manual quantity input changes
+  document.getElementById('orderItems').addEventListener('input', e => {
+    const input = e.target.closest('.qty-input');
+    if(!input) return;
+    const idx = Number(input.dataset.idx);
+    const val = Number(input.value);
+    if(!Number.isFinite(idx) || !CART[idx]) return;
+    if(!Number.isFinite(val) || val < 1){
+      // reset to 1
+      input.value = CART[idx].qty || 1;
+      return;
+    }
+    CART[idx].qty = Math.floor(val);
+    saveCart();
+    updateCart();
+    updateTotals();
   });
 
   document.getElementById('deliveryForm').addEventListener('input',()=>{
@@ -244,6 +392,7 @@ function attachCartListeners(){
     saveCart();
     updateCart();
     renderCartItems();
+    updateTotals();
   });
 
   // shipping radio changes should recalc totals
@@ -291,5 +440,5 @@ function attachImageFallbacks(){
 
 // Observe product container to re-attach fallbacks after render
 const observer = new MutationObserver(()=>attachImageFallbacks());
-observer.observe(productsEl, {childList:true, subtree:true});
+if(productsEl) observer.observe(productsEl, {childList:true, subtree:true});
 
