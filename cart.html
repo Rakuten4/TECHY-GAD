@@ -81,13 +81,14 @@
 						</fieldset>
 
 						<h3 style="margin-top:18px">Payment method</h3>
-						<div id="paymentMethods">
-							<label><input type="radio" name="payment" value="card" checked /> Credit / Debit card</label><br />
-							<label><input type="radio" name="payment" value="paypal" /> PayPal</label><br />
-							<label><input type="radio" name="payment" value="mobile" /> Mobile pay</label>
-						</div>
+									<div id="paymentMethods">
+										<label><input type="radio" name="payment" value="card" checked /> Credit / Debit card</label><br />
+										<label><input type="radio" name="payment" value="paypal" /> PayPal</label><br />
+										<label><input type="radio" name="payment" value="mobile" /> Mobile pay</label><br />
+										<label><input type="radio" name="payment" value="bank" /> Bank transfer</label>
+									</div>
 
-						<div id="cardFields" style="margin-top:12px">
+									<div id="cardFields" style="margin-top:12px">
 							<label>
 								Card number
 								<input id="cardNumber" inputmode="numeric" maxlength="19" placeholder="4242 4242 4242 4242" />
@@ -104,6 +105,24 @@
 								</label>
 							</div>
 						</div>
+
+									<div id="bankFields" style="display:none;margin-top:12px">
+										<div class="muted">Make a bank transfer to the account below. Use your full name as reference and keep the transfer receipt.</div>
+										<ul style="margin-top:8px">
+											<li>Account name: Techvilla Ltd</li>
+											<li>Account number: 12345678</li>
+											<li>Routing / Sort code: 00-00-00</li>
+											<li>IBAN: GB00TVLA00000012345678 (example)</li>
+										</ul>
+										<label style="display:block;margin-top:8px">
+											Payment reference (your name / order id)
+											<input id="bankReference" placeholder="e.g. John Doe - Order 1234" />
+										</label>
+										<label style="display:block;margin-top:8px">
+											Upload payment proof (optional)
+											<input id="bankProof" type="file" accept="image/*,application/pdf" />
+										</label>
+									</div>
 					</form>
 				</section>
 

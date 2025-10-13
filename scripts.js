@@ -227,11 +227,12 @@ function attachCartListeners(){
 
   document.querySelectorAll('input[name="payment"]').forEach(r=>{
     r.addEventListener('change',()=>{
-      const cardFields = document.getElementById('cardFields');
-      if(r.value==='card' && r.checked) cardFields.style.display='block';
-      else cardFields.style.display='none';
+      updatePaymentFields();
     })
   });
+
+  // initial payment fields state
+  updatePaymentFields();
 
   document.getElementById('placeOrder').addEventListener('click',()=>{
     if(!simpleDeliveryValid()) return alert('Please provide required delivery information.');
@@ -268,6 +269,14 @@ function simpleDeliveryValid(){
   const place = document.getElementById('placeOrder');
   if(place) place.disabled = !ok;
   return ok;
+}
+
+function updatePaymentFields(){
+  const selected = (document.querySelector('input[name="payment"]:checked')||{}).value || 'card';
+  const cardFields = document.getElementById('cardFields');
+  const bankFields = document.getElementById('bankFields');
+  if(cardFields) cardFields.style.display = (selected==='card') ? 'block' : 'none';
+  if(bankFields) bankFields.style.display = (selected==='bank') ? 'block' : 'none';
 }
 
 // Attach error fallback for images in cards (for when local images are absent)
