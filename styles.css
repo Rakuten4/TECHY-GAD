@@ -18,6 +18,9 @@ body{
 .brand{display:flex;align-items:center;gap:12px}
 .logo-placeholder{width:44px;height:44px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700}
 .nav{display:flex;align-items:center;gap:12px}
+
+/* Site logo image sizing */
+.site-logo{width:44px;height:44px;object-fit:contain;border-radius:6px;display:block}
 .search{padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:inherit;min-width:220px}
 .select{padding:8px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:inherit}
 .cart-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:10px;color:inherit;cursor:pointer}
