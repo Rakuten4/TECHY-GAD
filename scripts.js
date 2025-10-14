@@ -399,10 +399,43 @@ function attachCartListeners(){
 
   document.getElementById('placeOrder').addEventListener('click',()=>{
     if(!simpleDeliveryValid()) return alert('Please provide required delivery information.');
-    // For demo we won't process payments. Instead show a summary and clear cart.
-    const total = document.getElementById('totalAmount').textContent;
-    alert('Order placed — Total: ' + total + '\nThis demo does not process payments.');
-    // clear cart
+    // Prepare order email to send via user's mail client
+    try{
+      updateTotals();
+      const to = 'aderinkoyeemmanuel5@gmail.com';
+      const subject = 'New order from Techvilla';
+
+      // Collect delivery fields
+      const fields = ['fullName','email','phone','address','city','state','zip','country'];
+      const delivery = fields.map(id=>{
+        const el = document.getElementById(id);
+        return (el ? (id + ': ' + el.value) : (id + ':'));
+      }).join('\n');
+
+      // Order items
+      const items = CART.map(it => {
+        const qty = it.qty || 1;
+        const line = (it.price||0) * qty;
+        return `${qty} x ${it.name} @ ${formatPrice(it.price)} = ${formatPrice(line)}`;
+      }).join('\n');
+
+      // Totals
+      const subtotal = document.getElementById('subtotal') ? document.getElementById('subtotal').textContent : formatPrice(CART.reduce((s,it)=>s + ((it.price||0)*(it.qty||1)),0));
+      const shipping = document.getElementById('shippingAmount') ? document.getElementById('shippingAmount').textContent : '$0.00';
+      const tax = document.getElementById('taxAmount') ? document.getElementById('taxAmount').textContent : '$0.00';
+      const total = document.getElementById('totalAmount') ? document.getElementById('totalAmount').textContent : '$0.00';
+
+      const body = `Order from Techvilla\n\nDelivery details:\n${delivery}\n\nItems:\n${items || 'No items'}\n\nSubtotal: ${subtotal}\nShipping: ${shipping}\nTax: ${tax}\nTotal: ${total}\n\n--\nThis message was prepared by the Techvilla checkout form.`;
+
+      const mailto = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      // Open the user's mail client with the prepared message
+      window.location.href = mailto;
+    }catch(err){
+      console.error('Failed to prepare email', err);
+      alert('Order placed — please contact support via email.');
+    }
+
+    // clear cart after opening mail client
     CART = [];
     saveCart();
     updateCart();
