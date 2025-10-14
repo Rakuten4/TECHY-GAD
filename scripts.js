@@ -52,6 +52,21 @@ const PRODUCTS = [
   {id:13,name:'Mercedes-Benz C300',category:'vehicles',price:5000,desc:'Used Mercedes-Benz C300 — listing photo',imageLocal:'images/MERCEDES%20BENZ%20C300.jpeg',imageFallback:''},
   {id:14,name:'Mercedes-Benz CLA 250',category:'vehicles',price:8200,desc:'Used Mercedes-Benz CLA 250 — listing photo',imageLocal:'images/MERCEDES%20BENZ%20CLA%20250.jpeg',imageFallback:''},
   {id:15,name:'Toyota Venza (Unreg)',category:'vehicles',price:8700,desc:'Unregistered Toyota Venza — photo',imageLocal:'images/Unregistered%20Toyota%20Venza%20010.jpeg',imageFallback:''},
+  {id:16,name:'Brand New iPhone 14 Pro Max',category:'phones',price:799,desc:'Brand new iPhone 14 Pro Max — 128GB',imageLocal:'images/Brand New iphone 14 Promax.jpeg',imageFallback:''},
+  {id:17,name:'iPad Air 10th Gen',category:'tablets',price:499,desc:'iPad Air — 10th Gen',imageLocal:'images/Ipad Air 10th Gen.jpeg',imageFallback:''},
+  {id:18,name:'iPhone 11',category:'phones',price:199,desc:'iPhone 11 — used',imageLocal:'images/Iphone 11.jpeg',imageFallback:''},
+  {id:19,name:'iPhone 13 Pro',category:'phones',price:599,desc:'iPhone 13 Pro — good condition',imageLocal:'images/Iphone 13pro.jpeg',imageFallback:''},
+  {id:20,name:'iPhone 14 Pro',category:'phones',price:899,desc:'iPhone 14 Pro — new',imageLocal:'images/Iphone 14pro.jpeg',imageFallback:''},
+  {id:21,name:'iPhone 14 Pro Max',category:'phones',price:999,desc:'iPhone 14 Pro Max — new',imageLocal:'images/Iphone 14promax.jpeg',imageFallback:''},
+  {id:22,name:'iPhone 15 Pro 512GB',category:'phones',price:1299,desc:'iPhone 15 Pro • 512GB',imageLocal:'images/Iphone 15pro 512gb.jpeg',imageFallback:''},
+  {id:23,name:'iPhone 17',category:'phones',price:949,desc:'iPhone 17 — listing photo',imageLocal:'images/Iphone 17.jpeg',imageFallback:''},
+  {id:24,name:'JBL Charge 5',category:'audio',price:129,desc:'Portable Bluetooth speaker — JBL Charge 5',imageLocal:'images/JBL charge 5.jpeg',imageFallback:''},
+  {id:25,name:'MacBook Air 2017',category:'laptops',price:399,desc:'MacBook Air (2017) — refurbished',imageLocal:'images/Macbook Air 2017.jpeg',imageFallback:''},
+  {id:26,name:'Open Box iPhone 16',category:'phones',price:699,desc:'Open-box iPhone 16 — like new',imageLocal:'images/Open Box iphone 16.jpeg',imageFallback:''},
+  {id:27,name:'Open Box iWatch',category:'wearables',price:199,desc:'Open-box smartwatch',imageLocal:'images/Open Box Iwatch.jpeg',imageFallback:''},
+  {id:28,name:'PS4 & PS5 disk bundle',category:'consoles',price:79,desc:'Assorted PS4/PS5 disks bundle',imageLocal:'images/Ps4 & Ps5 disk.jpeg',imageFallback:''},
+  {id:29,name:'UK iPhone X',category:'phones',price:249,desc:'iPhone X — UK listing',imageLocal:'images/UK iphone X.jpeg',imageFallback:''},
+  {id:30,name:'UK mint XR',category:'phones',price:219,desc:'iPhone XR in mint condition',imageLocal:'images/UK mint XR.jpeg',imageFallback:''},
 ];
 
 function formatPrice(p){return '$' + p.toFixed(2)}
