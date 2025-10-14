@@ -504,3 +504,76 @@ function attachImageFallbacks(){
 const observer = new MutationObserver(()=>attachImageFallbacks());
 if(productsEl) observer.observe(productsEl, {childList:true, subtree:true});
 
+/* Live photos 3D panel: inject layers, mouse parallax, and auto-cycle */
+function initLivePhotos(){
+  const layersEl = document.getElementById('liveLayers');
+  if(!layersEl) return;
+  // Image sets to cycle through (prefer local images, fall back to remote if missing)
+  const sets = [
+    ['images/iphone17%20air.jpeg','images/earbuds.webp','images/chargers.jpg'],
+    ['images/Macbook%20pro.jpg','images/playstation%205.webp','images/JBL charge 5.jpeg'],
+    ['images/Iphone%2016plus%20256gb.jpeg','images/Iphone%2011promax%2064gb.jpeg','images/Apple%20ipad%2010th%20Gen.jpeg']
+  ];
+  let active = 0;
+
+  function renderSet(idx){
+    layersEl.innerHTML = '';
+    const set = sets[idx] || sets[0];
+    // We create 3 depth layers: back, mid, front
+    set.forEach((src,i)=>{
+      const layer = document.createElement('div');
+      layer.className = 'layer';
+      // deeper layers are translated farther in Z
+      const depth = (i - 1) * 40; // -40, 0, 40
+      layer.style.transform = `translateZ(${depth}px)`;
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = 'Live photo layer';
+      layer.appendChild(img);
+      // subtle parallax offsets stored as data
+      layer.dataset.depth = depth;
+      layersEl.appendChild(layer);
+    });
+  }
+
+  renderSet(active);
+
+  // Mouse parallax / tilt
+  const panel = layersEl.closest('.live-photos-panel');
+  if(panel){
+    panel.addEventListener('mousemove', e => {
+      const rect = panel.getBoundingClientRect();
+      const px = ((e.clientX - rect.left) / rect.width) - 0.5; // -0.5..0.5
+      const py = ((e.clientY - rect.top) / rect.height) - 0.5;
+      const rotateY = px * 7; // degrees
+      const rotateX = -py * 7;
+      layersEl.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      // move each layer based on its depth
+      const layerEls = layersEl.querySelectorAll('.layer');
+      layerEls.forEach(l => {
+        const d = Number(l.dataset.depth) || 0;
+        const tx = px * (d * 0.2);
+        const ty = py * (d * 0.2);
+        l.style.transform = `translateZ(${d}px) translate(${tx}px, ${ty}px)`;
+      });
+    });
+    panel.addEventListener('mouseleave', ()=>{
+      layersEl.style.transform = '';
+      const layerEls = layersEl.querySelectorAll('.layer');
+      layerEls.forEach(l => { const d = Number(l.dataset.depth) || 0; l.style.transform = `translateZ(${d}px)` });
+    });
+  }
+
+  // Auto-cycle every 6s
+  setInterval(()=>{
+    active = (active + 1) % sets.length;
+    // fade-out current then render new set
+    layersEl.querySelectorAll('.layer').forEach(l=>{ l.style.opacity = '0'; l.style.filter = 'blur(4px) grayscale(.3)'; });
+    setTimeout(()=> renderSet(active), 420);
+  }, 6000);
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  initLivePhotos();
+});
+
