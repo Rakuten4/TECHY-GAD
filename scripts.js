@@ -397,7 +397,7 @@ function attachCartListeners(){
   // initial payment fields state
   updatePaymentFields();
 
-  document.getElementById('placeOrder').addEventListener('click', async ()=>{
+  document.getElementById('placeOrder').addEventListener('click', ()=>{
     if(!simpleDeliveryValid()) return alert('Please provide required delivery information.');
     // Prepare order email to send via user's mail client
     try{
@@ -425,42 +425,17 @@ function attachCartListeners(){
       const tax = document.getElementById('taxAmount') ? document.getElementById('taxAmount').textContent : '$0.00';
       const total = document.getElementById('totalAmount') ? document.getElementById('totalAmount').textContent : '$0.00';
 
-      // Bank transfer: try to include payment proof info if user uploaded a file
       const paymentMethod = (document.querySelector('input[name="payment"]:checked')||{}).value || 'card';
       const bankRefEl = document.getElementById('bankReference');
       const bankRef = bankRefEl ? bankRefEl.value : '';
       const proofInput = document.getElementById('bankProof');
 
-      // Helper: read file as data URL (returns Promise)
-      const readFileAsDataURL = (file)=>{
-        return new Promise((resolve,reject)=>{
-          if(!file) return resolve(null);
-          const reader = new FileReader();
-          reader.onload = ()=>resolve(reader.result);
-          reader.onerror = ()=>reject(new Error('Failed reading file'));
-          reader.readAsDataURL(file);
-        })
-      }
-
       let proofNote = '';
       if(paymentMethod === 'bank'){
         if(proofInput && proofInput.files && proofInput.files.length>0){
-          const file = proofInput.files[0];
-          // Only inline small files to avoid extremely long mailto URIs
-          const MAX_INLINE_BYTES = 1500 * 1024; // ~1.5MB
-          try{
-            if(file.size <= MAX_INLINE_BYTES){
-              const dataUrl = await readFileAsDataURL(file);
-              // include a short preview/truncated data URL to help the receiver identify the proof
-              proofNote = `Payment proof attached as data URI (filename: ${file.name})\nData URI (truncated): ${dataUrl ? dataUrl.slice(0,2000) + '...[truncated]' : ''}\n`;
-            } else {
-              proofNote = `Payment proof file '${file.name}' is too large to include automatically. Please attach it manually to the email before sending.\n`;
-            }
-          }catch(e){
-            proofNote = `There was an issue reading the uploaded payment proof file. Please attach it manually to the email.\n`;
-          }
+          proofNote = `Payment proof uploaded (filename: ${proofInput.files[0].name}). Please attach this file manually to the email before sending.`;
         } else {
-          proofNote = 'No payment proof file uploaded. If you made a transfer, please attach the receipt to the email.\n';
+          proofNote = 'No payment proof file uploaded. If you made a transfer, please attach the receipt to the email.';
         }
       }
 
