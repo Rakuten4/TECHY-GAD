@@ -187,6 +187,27 @@ function addToCart(product){
   updateCart();
   // If we're currently viewing the cart page, re-render items so order summary updates immediately
   if(document.getElementById('orderItems')) renderCartItems();
+  // show a small toast notification to the user
+  showToast('Added to cart');
+}
+
+// Toast helper (global)
+function showToast(message = 'Done', ms = 2200){
+  const toast = document.getElementById('toast');
+  if(!toast) return;
+  toast.textContent = message;
+  toast.hidden = false;
+  toast.classList.remove('hide');
+  // ensure reflow so animation applies
+  void toast.offsetWidth;
+  toast.classList.add('show');
+  // Dismiss after ms
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(()=>{
+    toast.classList.remove('show');
+    toast.classList.add('hide');
+    setTimeout(()=>{ toast.hidden = true; toast.classList.remove('hide') }, 260);
+  }, ms);
 }
 
 function applyFilters(){
