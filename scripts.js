@@ -37,39 +37,42 @@ function normalizeCart(){
 }
 
 const PRODUCTS = [
-  {id:1,name:'iPhone 17 Air',category:'phones',price:899,desc:'iPhone 17 Air • 128GB • A20 Neural Chip',imageLocal:'images/iphone17%20air.jpeg',imageFallback:'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=iphone'},
-  {id:2,name:'Echo Buds',category:'audio',price:129,desc:'True wireless earbuds with ANC',imageLocal:'images/earbuds.webp',imageFallback:'https://images.unsplash.com/photo-1585386959984-a415522c7c36?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=earbuds'},
-  {id:3,name:'PowerGo 20W',category:'accessories',price:29,desc:'Fast USB-C charger',imageLocal:'images/chargers.jpg',imageFallback:'https://images.unsplash.com/photo-1585386959984-a415522c7c36?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=charger'},
-  {id:4,name:'MacBook Air',category:'phones',price:1199,desc:'MacBook Air • M3 • 16GB • 512GB',imageLocal:'images/Macbook%20pro.jpg',imageFallback:'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=macbook'},
-  {id:5,name:'PlayStation 5',category:'audio',price:499,desc:'PlayStation 5 • Disc • 1TB',imageLocal:'images/playstation%205.webp',imageFallback:'https://images.unsplash.com/photo-1606813902805-36a1f0d6c3fd?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=ps5'},
-  {id:6,name:'Tempered Glass',category:'accessories',price:19,desc:'Tempered glass screen protector',imageLocal:'images/glass%20protector.webp',imageFallback:'https://images.unsplash.com/photo-1551033406-611cf9a9cf72?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=protector'},
-  {id:7,name:'HP 15 Laptop',category:'laptops',price:249,desc:'HP 15 — 4GB RAM • 128GB storage',imageLocal:'images/HP%2015%204gb%20ram%20128%20internal%20storage.jpeg',imageFallback:''},
-  {id:8,name:'iPhone 11 Pro Max',category:'phones',price:249,desc:'iPhone 11 Pro Max • 64GB',imageLocal:'images/iphone%2011promax%2064gb.jpeg',imageFallback:''},
-  {id:9,name:'iPhone 16 Plus',category:'phones',price:799,desc:'iPhone 16 Plus • 256GB',imageLocal:'images/Iphone%2016plus%20256gb.jpeg',imageFallback:''},
-  {id:10,name:'Apple iPad 10th Gen',category:'tablets',price:449,desc:'iPad 10th Gen — 64GB',imageLocal:'images/Apple%20ipad%2010th%20Gen.jpeg',imageFallback:''},
-  {id:11,name:'PS3 Super Slim',category:'consoles',price:89,desc:'PlayStation 3 Super Slim — used',imageLocal:'images/Ps3%20Super%20slim.jpeg',imageFallback:''},
-  {id:12,name:'PS5 (Disk)',category:'consoles',price:549,desc:'PlayStation 5 with disk drive',imageLocal:'images/PS5%20with%20disk.jpeg',imageFallback:''},
-  {id:13,name:'Mercedes-Benz C300',category:'vehicles',price:5000,desc:'Used Mercedes-Benz C300 — listing photo',imageLocal:'images/MERCEDES%20BENZ%20C300.jpeg',imageFallback:''},
-  {id:14,name:'Mercedes-Benz CLA 250',category:'vehicles',price:8200,desc:'Used Mercedes-Benz CLA 250 — listing photo',imageLocal:'images/MERCEDES%20BENZ%20CLA%20250.jpeg',imageFallback:''},
-  {id:15,name:'Toyota Venza (Unreg)',category:'vehicles',price:8700,desc:'Unregistered Toyota Venza — photo',imageLocal:'images/Unregistered%20Toyota%20Venza%20010.jpeg',imageFallback:''},
-  {id:16,name:'Brand New iPhone 14 Pro Max',category:'phones',price:799,desc:'Brand new iPhone 14 Pro Max — 128GB',imageLocal:'images/Brand New iphone 14 Promax.jpeg',imageFallback:''},
-  {id:17,name:'iPad Air 10th Gen',category:'tablets',price:499,desc:'iPad Air — 10th Gen',imageLocal:'images/Ipad Air 10th Gen.jpeg',imageFallback:''},
-  {id:18,name:'iPhone 11',category:'phones',price:199,desc:'iPhone 11 — used',imageLocal:'images/Iphone 11.jpeg',imageFallback:''},
-  {id:19,name:'iPhone 13 Pro',category:'phones',price:599,desc:'iPhone 13 Pro — good condition',imageLocal:'images/Iphone 13pro.jpeg',imageFallback:''},
-  {id:20,name:'iPhone 14 Pro',category:'phones',price:899,desc:'iPhone 14 Pro — new',imageLocal:'images/Iphone 14pro.jpeg',imageFallback:''},
-  {id:21,name:'iPhone 14 Pro Max',category:'phones',price:999,desc:'iPhone 14 Pro Max — new',imageLocal:'images/Iphone 14promax.jpeg',imageFallback:''},
-  {id:22,name:'iPhone 15 Pro 512GB',category:'phones',price:1299,desc:'iPhone 15 Pro • 512GB',imageLocal:'images/Iphone 15pro 512gb.jpeg',imageFallback:''},
-  {id:23,name:'iPhone 17',category:'phones',price:949,desc:'iPhone 17 — listing photo',imageLocal:'images/Iphone 17.jpeg',imageFallback:''},
-  {id:24,name:'JBL Charge 5',category:'audio',price:129,desc:'Portable Bluetooth speaker — JBL Charge 5',imageLocal:'images/JBL charge 5.jpeg',imageFallback:''},
-  {id:25,name:'MacBook Air 2017',category:'laptops',price:399,desc:'MacBook Air (2017) — refurbished',imageLocal:'images/Macbook Air 2017.jpeg',imageFallback:''},
-  {id:26,name:'Open Box iPhone 16',category:'phones',price:699,desc:'Open-box iPhone 16 — like new',imageLocal:'images/Open Box iphone 16.jpeg',imageFallback:''},
-  {id:27,name:'Open Box iWatch',category:'wearables',price:199,desc:'Open-box smartwatch',imageLocal:'images/Open Box Iwatch.jpeg',imageFallback:''},
-  {id:28,name:'PS4 & PS5 disk bundle',category:'consoles',price:79,desc:'Assorted PS4/PS5 disks bundle',imageLocal:'images/Ps4 & Ps5 disk.jpeg',imageFallback:''},
-  {id:29,name:'UK iPhone X',category:'phones',price:249,desc:'iPhone X — UK listing',imageLocal:'images/UK iphone X.jpeg',imageFallback:''},
-  {id:30,name:'UK mint XR',category:'phones',price:219,desc:'iPhone XR in mint condition',imageLocal:'images/UK mint XR.jpeg',imageFallback:''},
+  {id:1,name:'iPhone 17 Promax',category:'phones',price:2790000,desc:'iPhone 17 Promax • 128GB • A20 Neural Chip',imageLocal:'images/iphone17%20air.jpeg',imageFallback:'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=iphone'},
+  {id:2,name:'Echo Buds',category:'audio',price:160000,desc:'True wireless earbuds with ANC',imageLocal:'images/earbuds.webp',imageFallback:'https://images.unsplash.com/photo-1585386959984-a415522c7c36?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=earbuds'},
+  {id:3,name:'PowerGo 20W',category:'accessories',price:25000,desc:'Fast USB-C charger',imageLocal:'images/chargers.jpg',imageFallback:'https://images.unsplash.com/photo-1585386959984-a415522c7c36?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=charger'},
+  {id:4,name:'MacBook Air',category:'phones',price:1800000,desc:'MacBook Air • M3 • 16GB • 512GB',imageLocal:'images/Macbook%20pro.jpg',imageFallback:'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=macbook'},
+  {id:5,name:'PlayStation 5',category:'audio',price:900000,desc:'PlayStation 5 • Disc • 1TB',imageLocal:'images/playstation%205.webp',imageFallback:'https://images.unsplash.com/photo-1606813902805-36a1f0d6c3fd?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=ps5'},
+  {id:6,name:'Tempered Glass',category:'accessories',price:10000,desc:'Tempered glass screen protector',imageLocal:'images/glass%20protector.webp',imageFallback:'https://images.unsplash.com/photo-1551033406-611cf9a9cf72?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=protector'},
+  {id:7,name:'HP 15 Laptop',category:'laptops',price:160000,desc:'HP 15 — 4GB RAM • 128GB storage',imageLocal:'images/HP%2015%204gb%20ram%20128%20internal%20storage.jpeg',imageFallback:''},
+  {id:8,name:'iPhone 11 Pro Max',category:'phones',price:350000,desc:'iPhone 11 Pro Max • 64GB',imageLocal:'images/iphone%2011promax%2064gb.jpeg',imageFallback:''},
+  {id:9,name:'iPhone 16 Plus',category:'phones',price:1180000,desc:'iPhone 16 Plus • 256GB',imageLocal:'images/Iphone%2016plus%20256gb.jpeg',imageFallback:''},
+  {id:10,name:'Apple iPad 10th Gen',category:'tablets',price:490000,desc:'iPad 10th Gen — 64GB',imageLocal:'images/Apple%20ipad%2010th%20Gen.jpeg',imageFallback:''},
+  {id:11,name:'PS3 Super Slim',category:'consoles',price:130000,desc:'PlayStation 3 Super Slim — used',imageLocal:'images/Ps3%20Super%20slim.jpeg',imageFallback:''},
+  {id:12,name:'PS5 (Disk)',category:'consoles',price:850000,desc:'PlayStation 5 with disk drive',imageLocal:'images/PS5%20with%20disk.jpeg',imageFallback:''},
+  {id:13,name:'Mercedes-Benz C300',category:'vehicles',price:7500000,desc:'Used Mercedes-Benz C300 — listing photo',imageLocal:'images/MERCEDES%20BENZ%20C300.jpeg',imageFallback:''},
+  {id:14,name:'Mercedes-Benz CLA 250',category:'vehicles',price:10000000,desc:'Used Mercedes-Benz CLA 250 — listing photo',imageLocal:'images/MERCEDES%20BENZ%20CLA%20250.jpeg',imageFallback:''},
+  {id:15,name:'Toyota Venza (Unreg)',category:'vehicles',price:12000000,desc:'Unregistered Toyota Venza — photo',imageLocal:'images/Unregistered%20Toyota%20Venza%20010.jpeg',imageFallback:''},
+  {id:16,name:'Brand New iPhone 14 Pro Max',category:'phones',price:800000,desc:'Brand new iPhone 14 Pro Max — 128GB',imageLocal:'images/Brand New iphone 14 Promax.jpeg',imageFallback:''},
+  {id:17,name:'iPad Air 10th Gen',category:'tablets',price:460000,desc:'iPad Air — 10th Gen',imageLocal:'images/Ipad Air 10th Gen.jpeg',imageFallback:''},
+  {id:18,name:'iPhone 11',category:'phones',price:250000,desc:'iPhone 11 — used',imageLocal:'images/Iphone 11.jpeg',imageFallback:''},
+  {id:19,name:'iPhone 13 Pro',category:'phones',price:550000,desc:'iPhone 13 Pro — good condition',imageLocal:'images/Iphone 13pro.jpeg',imageFallback:''},
+  {id:20,name:'iPhone 14 Pro',category:'phones',price:790000,desc:'iPhone 14 Pro — new',imageLocal:'images/Iphone 14pro.jpeg',imageFallback:''},
+  {id:21,name:'iPhone 14 Pro Max',category:'phones',price:830000,desc:'iPhone 14 Pro Max — new',imageLocal:'images/Iphone 14promax.jpeg',imageFallback:''},
+  {id:22,name:'iPhone 15 Pro 512GB',category:'phones',price:1150000,desc:'iPhone 15 Pro • 512GB',imageLocal:'images/Iphone 15pro 512gb.jpeg',imageFallback:''},
+  {id:23,name:'iPhone 17',category:'phones',price:1400000,desc:'iPhone 17 — listing photo',imageLocal:'images/Iphone 17.jpeg',imageFallback:''},
+  {id:24,name:'JBL Charge 5',category:'audio',price:170000,desc:'Portable Bluetooth speaker — JBL Charge 5',imageLocal:'images/JBL charge 5.jpeg',imageFallback:''},
+  {id:25,name:'MacBook Air 2017',category:'laptops',price:200000,desc:'MacBook Air (2017) — refurbished',imageLocal:'images/Macbook Air 2017.jpeg',imageFallback:''},
+  {id:26,name:'Open Box iPhone 16',category:'phones',price:1020000,desc:'Open-box iPhone 16 — like new',imageLocal:'images/Open Box iphone 16.jpeg',imageFallback:''},
+  {id:27,name:'Open Box iWatch',category:'wearables',price:330000,desc:'Open-box smartwatch',imageLocal:'images/Open Box Iwatch.jpeg',imageFallback:''},
+  {id:28,name:'PS4 & PS5 disk bundle',category:'consoles',price:50000,desc:'Assorted PS4/PS5 disks bundle',imageLocal:'images/Ps4 & Ps5 disk.jpeg',imageFallback:''},
+  {id:29,name:'UK iPhone X',category:'phones',price:195000,desc:'iPhone X — UK listing',imageLocal:'images/UK iphone X.jpeg',imageFallback:''},
+  {id:30,name:'UK mint XR',category:'phones',price:220000,desc:'iPhone XR in mint condition',imageLocal:'images/UK mint XR.jpeg',imageFallback:''},
 ];
 
-function formatPrice(p){return '₦' + p.toFixed(2)}
+const _ngnFormatter = new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 2 });
+function formatPrice(p){
+  try{ return _ngnFormatter.format(p); }catch(e){ return '₦' + (Number(p)||0).toFixed(2) }
+}
 
 function renderProducts(list){
   productsEl.innerHTML = '';
@@ -604,11 +607,16 @@ document.addEventListener('DOMContentLoaded', ()=>{
 });
 
 /* Fastest Finger Deals: render and countdowns */
+// Deals use Naira-scale prices and default to a 24-hour window
+const ONE_DAY = 24 * 60 * 60; // seconds
 const DEALS = [
-  { id: 'd1', name: 'Flash iPhone 16', price: 649, img: 'images/Iphone 16plus 256gb.jpeg', durationSec: 120 },
-  { id: 'd2', name: 'JBL Charge - Flash', price: 89, img: 'images/JBL charge 5.jpeg', durationSec: 300 },
-  { id: 'd3', name: 'Open Box iWatch', price: 149, img: 'images/Open Box Iwatch.jpeg', durationSec: 180 }
+  { id: 'd1', name: 'Flash iPhone 16', price: 1180000, img: 'images/Iphone 16plus 256gb.jpeg', durationSec: ONE_DAY, sold: true },
+  { id: 'd2', name: 'JBL Charge - Flash', price: 170000, img: 'images/JBL charge 5.jpeg', durationSec: ONE_DAY },
+  { id: 'd3', name: 'Open Box iWatch', price: 330000, img: 'images/Open Box Iwatch.jpeg', durationSec: ONE_DAY }
 ];
+
+// Shared end times so grid and modal timers stay in sync
+const dealEndTimes = {};
 
 function renderDeals(){
   const container = document.getElementById('dealsGrid');
@@ -619,6 +627,7 @@ function renderDeals(){
     card.className = 'deal-card';
     card.innerHTML = `
       <img src="${deal.img}" alt="${deal.name}" loading="lazy" />
+      ${deal.sold ? '<div class="sold-badge">Sold</div>' : ''}
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div>
           <div style="font-weight:700">${deal.name}</div>
@@ -630,38 +639,48 @@ function renderDeals(){
         </div>
       </div>
       <div style="display:flex;gap:8px;margin-top:8px">
-        <button class="btn" data-view-deal="${deal.id}">View</button>
-        <button class="btn primary" data-buy-deal="${deal.id}">Buy now</button>
+          <button class="btn" data-view-deal="${deal.id}">View</button>
+          <button class="btn primary" data-buy-deal="${deal.id}" ${deal.sold ? 'disabled' : ''}>${deal.sold ? 'Sold out' : 'Buy now'}</button>
       </div>
     `;
     container.appendChild(card);
-    // start countdown for this deal
+    // initialize end time (don't overwrite if already set)
+    if(!dealEndTimes[deal.id]) dealEndTimes[deal.id] = Date.now() + (deal.durationSec * 1000);
+    // start countdown for this deal (updates all matching timer elements)
     startDealCountdown(deal);
   });
 }
 
 const _dealTimers = {};
+function formatDurationSeconds(totalSec){
+  const s = Math.max(0, Math.floor(totalSec));
+  const hh = String(Math.floor(s / 3600)).padStart(2, '0');
+  const mm = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+  const ss = String(s % 60).padStart(2, '0');
+  return `${hh}:${mm}:${ss}`;
+}
+
 function startDealCountdown(deal){
-  const el = document.querySelector(`.deal-timer[data-dealid="${deal.id}"]`);
-  if(!el) return;
-  const end = Date.now() + (deal.durationSec * 1000);
+  // find all timer elements for this deal (grid + modal)
+  const els = document.querySelectorAll(`.deal-timer[data-dealid="${deal.id}"]`);
+  if(!els || els.length === 0) return;
+  // determine end time
+  let end = dealEndTimes[deal.id];
+  if(!end){ end = Date.now() + (deal.durationSec * 1000); dealEndTimes[deal.id] = end }
+
   function tick(){
-    const diff = Math.max(0, end - Date.now());
-    const s = Math.floor(diff/1000);
-    const mm = String(Math.floor(s/60)).padStart(2,'0');
-    const ss = String(s%60).padStart(2,'0');
-    el.textContent = `${mm}:${ss}`;
-    if(diff <= 0){
-      el.textContent = 'Expired';
-      el.classList.add('muted');
+    const diffMs = Math.max(0, end - Date.now());
+    const sec = Math.ceil(diffMs / 1000);
+    const str = diffMs > 0 ? formatDurationSeconds(sec) : 'Expired';
+    els.forEach(el => { el.textContent = str; if(diffMs <= 0) el.classList.add('muted') });
+    if(diffMs <= 0){
       clearInterval(_dealTimers[deal.id]);
-      // disable buy button
-      const btn = document.querySelector(`button[data-buy-deal="${deal.id}"]`);
-      if(btn) btn.disabled = true;
+      // disable buy buttons across modal/grid
+      document.querySelectorAll(`button[data-buy-deal="${deal.id}"]`).forEach(b=>b.disabled = true);
     }
   }
   tick();
-  _dealTimers[deal.id] = setInterval(tick, 900);
+  _dealTimers[deal.id] = setInterval(tick, 1000);
 }
 
 // delegate buy now & view for deals
@@ -671,6 +690,7 @@ document.addEventListener('click', e => {
     const id = buy.dataset.buyDeal;
     const deal = DEALS.find(d=>d.id===id);
     if(deal){
+      if(deal.sold){ showToast('Sorry — this deal is sold out'); return }
       addToCart({ id: `deal-${deal.id}`, name: deal.name, price: deal.price, imageLocal: deal.img });
     }
   }
@@ -694,6 +714,7 @@ function showDealsModal(){
     card.className = 'deal-card';
     card.innerHTML = `
       <img src="${d.img}" alt="${d.name}" />
+      ${d.sold ? '<div class="sold-badge">Sold</div>' : ''}
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div>
           <div style="font-weight:700">${d.name}</div>
@@ -706,7 +727,7 @@ function showDealsModal(){
       </div>
       <div style="display:flex;gap:8px;margin-top:8px">
         <button class="btn" data-view-deal="${d.id}">View</button>
-        <button class="btn primary" data-buy-deal="${d.id}">Buy now</button>
+        <button class="btn primary" data-buy-deal="${d.id}" ${d.sold ? 'disabled' : ''}>${d.sold ? 'Sold out' : 'Buy now'}</button>
       </div>
     `;
     content.appendChild(card);

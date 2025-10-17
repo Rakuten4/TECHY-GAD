@@ -107,6 +107,10 @@ body{
   .deals-modal-wrap .deals-grid{margin:0}
 }
 
+/* Sold badge */
+.sold-badge{position:absolute;left:12px;top:12px;background:#b91c1c;color:#fff;padding:6px 10px;border-radius:8px;font-weight:700;z-index:50}
+.deal-card{position:relative}
+
 /* Uploaded photos gallery */
 .uploads-section{margin-top:28px}
 .uploads-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
