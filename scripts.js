@@ -668,7 +668,21 @@ function startDealCountdown(deal){
   let end = dealEndTimes[deal.id];
   if(!end){ end = Date.now() + (deal.durationSec * 1000); dealEndTimes[deal.id] = end }
 
+  // Helper to stop a running timer for a deal and update UI to "Sold"
+  function stopDealTimer(id){
+    try{ if(_dealTimers[id]){ clearInterval(_dealTimers[id]); delete _dealTimers[id]; } }catch(e){}
+    // Update all visible timers for this deal to show Sold and mute them
+    document.querySelectorAll(`.deal-timer[data-dealid="${id}"]`).forEach(el => { el.textContent = 'Sold'; el.classList.add('muted'); });
+    // Disable buy buttons across modal/grid
+    document.querySelectorAll(`button[data-buy-deal="${id}"]`).forEach(b=>{ b.disabled = true });
+  }
+
+  // If this deal is already marked sold, stop and show Sold immediately
+  if(deal.sold){ stopDealTimer(deal.id); return }
+
   function tick(){
+    // If deal becomes sold while timer is running, stop it
+    if(deal.sold){ stopDealTimer(deal.id); return }
     const diffMs = Math.max(0, end - Date.now());
     const sec = Math.ceil(diffMs / 1000);
     const str = diffMs > 0 ? formatDurationSeconds(sec) : 'Expired';
