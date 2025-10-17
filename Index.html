@@ -77,6 +77,11 @@
           <img src="images/Apple ipad 10th Gen.jpeg" alt="iPad duplicate" loading="lazy"/>
         </div>
       </section>
+
+      <section class="deals-section">
+        <h3>Fastest Finger Deals</h3>
+        <div id="dealsGrid" class="deals-grid" aria-live="polite"></div>
+      </section>
     </main>
 
     <!-- Product Modal -->
@@ -108,6 +113,22 @@
     <a class="whatsapp-fab" href="https://wa.me/2348146928961" target="_blank" rel="noopener" aria-label="Contact us on WhatsApp">
       <img src="images/WhatsApp.webp" alt="WhatsApp" />
     </a>
+    <!-- Deals Modal (pops up on site open) -->
+    <div id="dealsModal" class="modal" aria-hidden="true">
+      <div class="modal-content" role="dialog" aria-modal="true" aria-label="Fastest Finger Deals">
+        <button id="dealsModalClose" class="modal-close" aria-label="Close deals">×</button>
+        <div class="modal-body">
+          <div style="width:100%">
+            <h2 style="margin-top:0;margin-bottom:12px;letter-spacing:1px">FASTEST FINGER DEALS</h2>
+            <div class="deals-modal-wrap">
+              <button id="dealsPrev" class="deals-nav" aria-label="Previous deals">‹</button>
+              <div id="dealsModalContent" class="deals-grid"></div>
+              <button id="dealsNext" class="deals-nav" aria-label="Next deals">›</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- Toast notifications -->
     <div id="toast" role="status" aria-live="polite" aria-atomic="true" class="toast" hidden>Added to cart</div>
   </body>

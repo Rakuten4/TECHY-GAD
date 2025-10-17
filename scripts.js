@@ -69,7 +69,7 @@ const PRODUCTS = [
   {id:30,name:'UK mint XR',category:'phones',price:219,desc:'iPhone XR in mint condition',imageLocal:'images/UK mint XR.jpeg',imageFallback:''},
 ];
 
-function formatPrice(p){return '$' + p.toFixed(2)}
+function formatPrice(p){return '₦' + p.toFixed(2)}
 
 function renderProducts(list){
   productsEl.innerHTML = '';
@@ -596,5 +596,146 @@ function initLivePhotos(){
 
 document.addEventListener('DOMContentLoaded', ()=>{
   initLivePhotos();
+  renderDeals();
+  // Show deals modal shortly after load
+  setTimeout(()=>{
+    showDealsModal();
+  }, 700);
 });
+
+/* Fastest Finger Deals: render and countdowns */
+const DEALS = [
+  { id: 'd1', name: 'Flash iPhone 16', price: 649, img: 'images/Iphone 16plus 256gb.jpeg', durationSec: 120 },
+  { id: 'd2', name: 'JBL Charge - Flash', price: 89, img: 'images/JBL charge 5.jpeg', durationSec: 300 },
+  { id: 'd3', name: 'Open Box iWatch', price: 149, img: 'images/Open Box Iwatch.jpeg', durationSec: 180 }
+];
+
+function renderDeals(){
+  const container = document.getElementById('dealsGrid');
+  if(!container) return;
+  container.innerHTML = '';
+  DEALS.forEach(deal => {
+    const card = document.createElement('article');
+    card.className = 'deal-card';
+    card.innerHTML = `
+      <img src="${deal.img}" alt="${deal.name}" loading="lazy" />
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-weight:700">${deal.name}</div>
+          <div class="muted">Limited time — first come</div>
+        </div>
+        <div style="text-align:right">
+          <div class="deal-price">${formatPrice(deal.price)}</div>
+          <div class="deal-timer" data-dealid="${deal.id}">--:--</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn" data-view-deal="${deal.id}">View</button>
+        <button class="btn primary" data-buy-deal="${deal.id}">Buy now</button>
+      </div>
+    `;
+    container.appendChild(card);
+    // start countdown for this deal
+    startDealCountdown(deal);
+  });
+}
+
+const _dealTimers = {};
+function startDealCountdown(deal){
+  const el = document.querySelector(`.deal-timer[data-dealid="${deal.id}"]`);
+  if(!el) return;
+  const end = Date.now() + (deal.durationSec * 1000);
+  function tick(){
+    const diff = Math.max(0, end - Date.now());
+    const s = Math.floor(diff/1000);
+    const mm = String(Math.floor(s/60)).padStart(2,'0');
+    const ss = String(s%60).padStart(2,'0');
+    el.textContent = `${mm}:${ss}`;
+    if(diff <= 0){
+      el.textContent = 'Expired';
+      el.classList.add('muted');
+      clearInterval(_dealTimers[deal.id]);
+      // disable buy button
+      const btn = document.querySelector(`button[data-buy-deal="${deal.id}"]`);
+      if(btn) btn.disabled = true;
+    }
+  }
+  tick();
+  _dealTimers[deal.id] = setInterval(tick, 900);
+}
+
+// delegate buy now & view for deals
+document.addEventListener('click', e => {
+  const buy = e.target.closest('button[data-buy-deal]');
+  if(buy){
+    const id = buy.dataset.buyDeal;
+    const deal = DEALS.find(d=>d.id===id);
+    if(deal){
+      addToCart({ id: `deal-${deal.id}`, name: deal.name, price: deal.price, imageLocal: deal.img });
+    }
+  }
+  const viewDeal = e.target.closest('button[data-view-deal]');
+  if(viewDeal){
+    const id = viewDeal.dataset.viewDeal;
+    const deal = DEALS.find(d=>d.id===id);
+    if(deal) openModal({ id: `deal-${deal.id}`, name: deal.name, price: deal.price, desc: 'Fastest Finger Deal', imageLocal: deal.img });
+  }
+});
+
+/* Deals modal popup */
+function showDealsModal(){
+  const modal = document.getElementById('dealsModal');
+  const content = document.getElementById('dealsModalContent');
+  if(!modal || !content) return;
+  // populate modal with current deals (reuse small card markup)
+  content.innerHTML = '';
+  DEALS.forEach(d=>{
+    const card = document.createElement('div');
+    card.className = 'deal-card';
+    card.innerHTML = `
+      <img src="${d.img}" alt="${d.name}" />
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-weight:700">${d.name}</div>
+          <div class="muted">Limited time</div>
+        </div>
+        <div style="text-align:right">
+          <div class="deal-price">${formatPrice(d.price)}</div>
+          <div class="deal-timer" data-dealid="modal-${d.id}">${Math.floor(d.durationSec/60)}:${String(d.durationSec%60).padStart(2,'0')}</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn" data-view-deal="${d.id}">View</button>
+        <button class="btn primary" data-buy-deal="${d.id}">Buy now</button>
+      </div>
+    `;
+    content.appendChild(card);
+  });
+
+  modal.setAttribute('aria-hidden','false');
+  // close handlers
+  const closeBtn = document.getElementById('dealsModalClose');
+  closeBtn.addEventListener('click', ()=> modal.setAttribute('aria-hidden','true'));
+  modal.addEventListener('click', e => { if(e.target === modal) modal.setAttribute('aria-hidden','true') });
+  document.addEventListener('keydown', function onKey(e){
+    if(e.key === 'Escape'){ modal.setAttribute('aria-hidden','true'); document.removeEventListener('keydown', onKey); }
+    if(e.key === 'ArrowRight') scrollDeals(1);
+    if(e.key === 'ArrowLeft') scrollDeals(-1);
+  });
+
+  // chevron nav
+  const prev = document.getElementById('dealsPrev');
+  const next = document.getElementById('dealsNext');
+  if(prev) prev.addEventListener('click', ()=> scrollDeals(-1));
+  if(next) next.addEventListener('click', ()=> scrollDeals(1));
+}
+
+function scrollDeals(dir = 1){
+  const scroller = document.getElementById('dealsModalContent');
+  if(!scroller) return;
+  // compute scroll by one card width
+  const card = scroller.querySelector('.deal-card');
+  const step = (card ? card.offsetWidth + 12 : 260) * dir;
+  scroller.scrollBy({ left: step, behavior: 'smooth' });
+}
 
