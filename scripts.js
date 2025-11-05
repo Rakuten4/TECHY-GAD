@@ -123,12 +123,13 @@ function updateCart(){
   }, 0);
     const shippingMethod = (document.querySelector('input[name="shipping"]:checked')||{}).value || 'standard';
   let shipping = 0;
-  if(shippingMethod==='expedited') shipping = 9.99;
-  if(shippingMethod==='standard') shipping = 4.99;
+  if(shippingMethod==='expedited') shipping = 1500;
+  if(shippingMethod==='standard') shipping = 1500;
   if(shippingMethod==='pickup') shipping = 0;
-  // tax calculated on subtotal minus discounts
-  const taxable = Math.max(0, subtotal - discountTotal);
-  const tax = +(taxable * 0.07).toFixed(2);
+  // delivery fee calculated per item: 2500 per item, but if 3+ items, charge for only 2 items
+  const totalItems = CART.reduce((sum, item) => sum + (item.qty || 1), 0);
+  const chargeableItems = totalItems >= 3 ? 2 : totalItems;
+  const tax = chargeableItems * 2500;
   const total = +(subtotal - discountTotal + shipping + tax).toFixed(2);
   // If product already in cart (by id), increment qty; otherwise add with qty:1
   const existing = CART.find(it => it.id === product.id);
@@ -288,8 +289,8 @@ function renderCartItems(){
     item.className = 'cart-item';
     // Show quantity controls and line total
     const lineTotal = (p.price || 0) * (p.qty || 1);
-    // Simple per-line tax (7%) and per-line discount (if any)
-    const lineTax = +((lineTotal) * 0.07).toFixed(2);
+    // Delivery fee: 2500 per item
+    const lineTax = (p.qty || 1) * 2500;
     const lineDiscount = (p.discount && typeof p.discount === 'number') ? +(lineTotal * p.discount).toFixed(2) : 0;
     item.innerHTML = `<div style="display:flex;gap:12px;align-items:center">
       <img src="${p.imageLocal || p.imageFallback || ''}" alt="${p.name}" style="width:64px;height:64px;object-fit:cover;border-radius:8px;" />
@@ -302,7 +303,7 @@ function renderCartItems(){
           <button class="btn small" aria-label="Increase quantity for ${p.name}" data-incr="${idx}">+</button>
         </div>
         <div style="margin-top:6px;font-size:13px;color:var(--muted)">
-          Line tax: ${formatPrice(lineTax)}${lineDiscount?(' • Discount: ' + formatPrice(lineDiscount)) : ''}
+          Line delivery: ${formatPrice(lineTax)}${lineDiscount?(' • Discount: ' + formatPrice(lineDiscount)) : ''}
         </div>
       </div>
       <div style="text-align:right">
@@ -319,12 +320,15 @@ function updateTotals(){
   const subtotal = CART.reduce((s,it)=>s + ((it.price||0) * (it.qty||1)),0);
   const shippingMethod = (document.querySelector('input[name="shipping"]:checked')||{}).value || 'standard';
   let shipping = 0;
-  if(shippingMethod==='expedited') shipping = 9.99;
-  if(shippingMethod==='standard') shipping = 4.99;
+  if(shippingMethod==='expedited') shipping = 1500;
+  if(shippingMethod==='standard') shipping = 1500;
   if(shippingMethod==='pickup') shipping = 0;
   // If cart is empty, clear shipping fee
   if(subtotal === 0) shipping = 0;
-  const tax = +(subtotal * 0.07).toFixed(2);
+  // Delivery fee: 2500 per item, but if 3+ items, charge for only 2 items
+  const totalItems = CART.reduce((sum, item) => sum + (item.qty || 1), 0);
+  const chargeableItems = totalItems >= 3 ? 2 : totalItems;
+  const tax = chargeableItems * 2500;
   const total = +(subtotal + shipping + tax).toFixed(2);
   const subtotalEl = document.getElementById('subtotal');
   const shippingEl = document.getElementById('shippingAmount');
