@@ -6,6 +6,9 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<title>Cart — Techvilla</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="styles.css" />
 	</head>
 	<body>
@@ -19,8 +22,16 @@
 					</div>
 				</div>
 					<nav class="nav">
-						<a id="homeBtn" class="cart-btn" href="Index.html">Continue shopping</a>
-						<button id="cartBtnHeader" class="cart-btn">Cart <span id="cartCountHeader" class="cart-count">0</span></button>
+						<a id="homeBtn" class="cart-btn continue-shopping-btn" href="Index.html">Back to Shopping</a>
+						<button id="cartBtnHeader" class="cart-btn">
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								<circle cx="9" cy="21" r="1"></circle>
+								<circle cx="20" cy="21" r="1"></circle>
+								<path d="m1 1 4 4 13 3.5-3 7H6"></path>
+								<path d="M16 8 6 8"></path>
+							</svg>
+							<span id="cartCountHeader" class="cart-count">0</span>
+						</button>
 					</nav>
 			</div>
 		</header>
@@ -84,37 +95,15 @@
 
 						<h3 style="margin-top:18px">Payment method</h3>
 									<div id="paymentMethods">
-										<label><input type="radio" name="payment" value="card" checked /> Credit / Debit card</label><br />
-										<label><input type="radio" name="payment" value="paypal" /> PayPal</label><br />
-										<label><input type="radio" name="payment" value="mobile" /> Mobile pay</label><br />
-										<label><input type="radio" name="payment" value="bank" /> Bank transfer</label>
+										<label><input type="radio" name="payment" value="bank" checked /> Bank transfer</label>
 									</div>
 
-									<div id="cardFields" style="margin-top:12px">
-							<label>
-								Card number
-								<input id="cardNumber" inputmode="numeric" maxlength="19" placeholder="4242 4242 4242 4242" />
-								<div class="field-error" id="errCardNumber"></div>
-							</label>
-							<div style="display:flex;gap:8px">
-								<label style="flex:1">
-									Expiry
-									<input id="cardExpiry" placeholder="MM/YY" />
-								</label>
-								<label style="width:120px">
-									CVC
-									<input id="cardCvc" inputmode="numeric" maxlength="4" />
-								</label>
-							</div>
-						</div>
-
-									<div id="bankFields" style="display:none;margin-top:12px">
+									<div id="bankFields" style="margin-top:12px">
 										<div class="muted">Make a bank transfer to the account below. Use your full name as reference and keep the transfer receipt.</div>
 										<ul style="margin-top:8px">
+											<li>Bank name: Moniepoint Microfinance Bank</li>
 											<li>Account name: Techvilla Ltd</li>
-											<li>Account number: 8176620230 Moniepoint</li>
-											<li>Routing / Sort code: 00-00-00</li>
-											<li>IBAN: GB00TVLA00000012345678 (example)</li>
+											<li>Account number: 8176620230</li>
 										</ul>
 										<label style="display:block;margin-top:8px">
 											Payment reference (your name / order id)
@@ -136,7 +125,7 @@
 						<div class="summary-row"><span>Subtotal</span><strong id="subtotal">₦0.00</strong></div>
 						<div class="summary-row"><span>Shipping</span><strong id="shippingAmount">₦0.00</strong></div>
 						<div class="summary-row"><span>Discount</span><strong id="discountAmount">₦0.00</strong></div>
-						<div class="summary-row"><span>Tax (est.)</span><strong id="taxAmount">₦0.00</strong></div>
+						<div class="summary-row"><span>Delivery</span><strong id="taxAmount">₦0.00</strong></div>
 						<div class="summary-row" style="font-size:18px;margin-top:8px"><span>Total</span><strong id="totalAmount">₦0.00</strong></div>
 					</div>
 
