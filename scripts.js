@@ -216,12 +216,36 @@ function showToast(message = 'Done', ms = 2200){
 function applyFilters(){
   const q = searchInput.value.trim().toLowerCase();
   const cat = categoryFilter.value;
-  const filtered = PRODUCTS.filter(p=>{
+  
+  // Search in PRODUCTS array
+  const filteredProducts = PRODUCTS.filter(p=>{
     if(cat!=='all' && p.category!==cat) return false;
     if(q && !(p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q))) return false;
     return true;
   });
-  renderProducts(filtered);
+  
+  // Search in DEALS array and convert to product-like format for rendering
+  const filteredDeals = [];
+  if(q) {
+    DEALS.forEach(deal => {
+      if(deal.name.toLowerCase().includes(q)) {
+        // Convert deal to product-like format for rendering
+        filteredDeals.push({
+          id: `deal-${deal.id}`,
+          name: `${deal.name} (Deal)`,
+          category: 'deals',
+          price: deal.price,
+          desc: 'Limited time flash deal',
+          imageLocal: deal.img,
+          imageFallback: ''
+        });
+      }
+    });
+  }
+  
+  // Combine results: deals first (priority), then products
+  const allResults = [...filteredDeals, ...filteredProducts];
+  renderProducts(allResults);
 }
 
 // Init
@@ -611,7 +635,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 const ONE_DAY = 24 * 60 * 60; // seconds
 const DEALS = [
   { id: 'd1', name: 'Flash iPhone 16', price: 1180000, img: 'images/Iphone 16plus 256gb.jpeg', durationSec: ONE_DAY, sold: true },
-  { id: 'd2', name: 'JBL Charge - Flash', price: 170000, img: 'images/JBL charge 5.jpeg', durationSec: ONE_DAY },
+  { id: 'd2', name: 'JBL Charge - Flash', price: 170000, img: 'images/JBL charge 5.jpeg', durationSec: ONE_DAY, sold: true },
   { id: 'd3', name: 'Open Box iWatch', price: 330000, img: 'images/Open Box Iwatch.jpeg', durationSec: ONE_DAY }
 ];
 
